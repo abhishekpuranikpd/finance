@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  role      UserRole @default(STAFF)
+  staff     Staff?   @relation(fields: [staffId], references: [id])
+  staffId   String?  @unique @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  SUPERADMIN
+  STAFF
+}
+
+model Staff {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String     @unique
+  phone     String
+  customers Customer[]
+  user      User?
+  createdAt DateTime   @default(now())
+}
+
+model Customer {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  phone      String
+  address    String
+  email      String
+  emiPlans   EMIPlan[]
+  assignedTo Staff?    @relation(fields: [staffId], references: [id])
+  staffId    String?   @db.ObjectId
+  createdAt  DateTime  @default(now())
+}
+
+model EMIPlan {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  amount      Float
+  tenure      Int // in months
+  startDate   DateTime
+  endDate     DateTime
+  customer    Customer      @relation(fields: [customerId], references: [id])
+  customerId  String        @db.ObjectId
+  emiSchedule EMISchedule[]
+  createdAt   DateTime      @default(now())
+}
+
+model EMISchedule {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  dueDate      DateTime
+  status       PaymentStatus  @default(DUE)
+  amount       Float
+  payments     Payment[] // one-to-many
+  emiPlan      EMIPlan        @relation(fields: [emiPlanId], references: [id])
+  emiPlanId    String         @db.ObjectId
+  reminderSent ReminderStatus @default(NOT_SENT)
+}
+
+model Payment {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  paymentDate   DateTime    @default(now())
+  mode          PaymentMode
+  amount        Float
+  emiSchedule   EMISchedule @relation(fields: [emiScheduleId], references: [id])
+  emiScheduleId String      @db.ObjectId
+}
+
+enum PaymentStatus {
+  PAID
+  DUE
+  OVERDUE
+}
+
+enum ReminderStatus {
+  NOT_SENT
+  BEFORE_DUE
+  ON_DUE
+  AFTER_DUE
+}
+
+enum PaymentMode {
+  CASH
+  UPI
+  BANK_TRANSFER
+  OTHER
+}
