@@ -7,86 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  password  String
-  role      UserRole @default(STAFF)
-  staff     Staff?   @relation(fields: [staffId], references: [id])
-  staffId   String?  @unique @db.ObjectId
-  createdAt DateTime @default(now())
-}
-
-enum UserRole {
-  SUPERADMIN
-  STAFF
-}
-
-model Staff {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String     @unique
-  phone     String
-  customers Customer[]
-  user      User?
-  createdAt DateTime   @default(now())
-}
-
-model Customer {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  phone      String
-  address    String
-  email      String
-  emiPlans   EMIPlan[]
-  assignedTo Staff?    @relation(fields: [staffId], references: [id])
-  staffId    String?   @db.ObjectId
-  createdAt  DateTime  @default(now())
-}
-
-model EMIPlan {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  amount      Float
-  tenure      Int // in months
-  startDate   DateTime
-  endDate     DateTime
-  customer    Customer      @relation(fields: [customerId], references: [id])
-  customerId  String        @db.ObjectId
-  emiSchedule EMISchedule[]
-  createdAt   DateTime      @default(now())
-}
-
-model EMISchedule {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  dueDate      DateTime
-  status       PaymentStatus  @default(DUE)
-  amount       Float
-  payments     Payment[] // one-to-many
-  emiPlan      EMIPlan        @relation(fields: [emiPlanId], references: [id])
-  emiPlanId    String         @db.ObjectId
-  reminderSent ReminderStatus @default(NOT_SENT)
-}
-
-model Payment {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  paymentDate   DateTime    @default(now())
-  mode          PaymentMode
-  amount        Float
-  emiSchedule   EMISchedule @relation(fields: [emiScheduleId], references: [id])
-  emiScheduleId String      @db.ObjectId
-}
-
 enum PaymentStatus {
   PAID
   DUE
   OVERDUE
-}
-
-enum ReminderStatus {
-  NOT_SENT
-  BEFORE_DUE
-  ON_DUE
-  AFTER_DUE
 }
 
 enum PaymentMode {
@@ -94,4 +18,50 @@ enum PaymentMode {
   UPI
   BANK_TRANSFER
   OTHER
+}
+
+model User {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String     @unique
+  phone     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  customers Customer[]
+}
+
+model Scheme {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String // e.g., "Laptop Scheme"
+  description   String?
+  monthlyAmount Float
+  totalMonths   Int
+  createdAt     DateTime   @default(now())
+  customers     Customer[]
+}
+
+model Customer {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  phone     String?   @unique
+  address   String?
+  email     String?
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String    @db.ObjectId
+  scheme    Scheme    @relation(fields: [schemeId], references: [id])
+  schemeId  String    @db.ObjectId
+  payments  Payment[]
+  createdAt DateTime  @default(now())
+}
+
+model Payment {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  month       Int // 1 to 12 (or whatever is scheme.totalMonths)
+  year        Int
+  paymentDate DateTime? // nullable: if not paid yet
+  amount      Float
+  status      PaymentStatus @default(DUE)
+  mode        PaymentMode?
+  customer    Customer      @relation(fields: [customerId], references: [id])
+  customerId  String        @db.ObjectId
 }

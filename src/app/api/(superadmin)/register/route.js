@@ -1,45 +1,51 @@
-// app/api/register/route.ts
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 
 export async function POST(req) {
   try {
-    const { email, password, role } = await req.json();
+    const body = await req.json();
+    const { email, password, role, name, phone } = body;
 
     if (!email || !password || !role) {
       return NextResponse.json(
-        { message: "Missing required fields" },
+        { message: "Email, password, and role are required." },
         { status: 400 }
       );
     }
 
-    // Check for existing user
-    const existingUser = await db.user.findUnique({ where: { email } });
+    const existingUser = await db.user.findUnique({
+      where: { email },
+    });
+
     if (existingUser) {
       return NextResponse.json(
-        { message: "Email already registered" },
+        { message: "Email already exists." },
         { status: 409 }
       );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user with role
-    const user = await db.user.create({
+    const newUser = await db.user.create({
       data: {
+        name,
         email,
+        phone,
         password: hashedPassword,
         role,
       },
     });
 
     return NextResponse.json(
-      { message: "User registered", user },
+      { message: "User registered successfully", user: newUser },
       { status: 201 }
     );
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  } catch (error) {
+    console.error("Registration error:", error);
+    return NextResponse.json(
+      { message: "Something went wrong on the server." },
+      { status: 500 }
+    );
   }
 }

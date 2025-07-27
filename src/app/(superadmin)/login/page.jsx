@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import LoginClient from "../components/loginclient";
 
 const page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <LoginClient />
+    </div>
+  );
+};
 
-export default page
+export default page;
