@@ -1,12 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
+// app/page.jsx
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-   HII Welocome to finance app
-   <Link href={"/register"}>Register Page</Link>
-
-    </div>
-  );
+  redirect("/login");
 }

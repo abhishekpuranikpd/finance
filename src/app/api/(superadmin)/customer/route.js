@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { name, phone, email, address, userId, schemeId } = await req.json();
+    const { name, phone, email, address, userId,cardNo,  schemeId } = await req.json();
 
     if (!name || !phone || !userId || !schemeId) {
       return NextResponse.json(
@@ -35,6 +35,7 @@ export async function POST(req) {
         scheme: {
           connect: { id: schemeId },
         },
+        cardNo,
       },
       include: {
         user: true,
