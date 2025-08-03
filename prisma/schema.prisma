@@ -38,14 +38,15 @@ model User {
 
 model Scheme {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  name          String // e.g., "Laptop Scheme"
+  name          String
   description   String?
   monthlyAmount Float
   totalMonths   Int
   createdAt     DateTime   @default(now())
+  totalMembers  Int       // 🔥 removed "?"
   customers     Customer[]
+  cardPrefix    String 
 }
-
 model Customer {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String?

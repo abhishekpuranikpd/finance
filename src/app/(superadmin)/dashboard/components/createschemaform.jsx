@@ -32,6 +32,8 @@ export default function CreateSchemeForm() {
     description: "",
     monthlyAmount: "",
     totalMonths: "",
+    totalMembers: "",
+    cardPrefix: "",
   })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -59,6 +61,8 @@ export default function CreateSchemeForm() {
           ...formData,
           monthlyAmount: Number.parseFloat(formData.monthlyAmount),
           totalMonths: Number.parseInt(formData.totalMonths),
+          totalMembers: Number.parseInt(formData.totalMembers),
+          cardPrefix: formData.cardPrefix,
         }),
       })
 
@@ -305,6 +309,18 @@ export default function CreateSchemeForm() {
                       <CheckCircle2 className="absolute right-4 top-4 h-5 w-5 text-green-500" />
                     )}
                   </div>
+                  <div>
+                    <label>Total Members</label>
+                    <Input
+                      id="totalMembers"
+                      name="totalMembers"
+                      type="number"
+                      value={formData.totalMembers}
+                      onChange={handleChange}
+                      placeholder="100"
+                      required
+                    />
+                  </div>
                 </div>
 
                 {/* Total Months */}
@@ -334,6 +350,21 @@ export default function CreateSchemeForm() {
                     />
                     {formData.totalMonths && <CheckCircle2 className="absolute right-4 top-4 h-5 w-5 text-green-500" />}
                   </div>
+                  <div>
+  <label className="text-gray-800 font-semibold">Card Prefix</label>
+  <Input
+    id="cardPrefix"
+    name="cardPrefix"
+    type="text"
+    value={formData.cardPrefix}
+    onChange={handleChange}
+    placeholder="LP"
+    required
+    maxLength={5}
+    className="mt-1"
+  />
+</div>
+
                 </div>
               </div>
 

@@ -12,9 +12,23 @@ const CustomerslistPage = async () => {
     },
   });
 
-  // Extract unique schemes and users from the customers data
-  const schemes = [...new Set(customers.map(c => c.scheme).filter(Boolean))];
-  const users = [...new Set(customers.map(c => c.user).filter(Boolean))];
+  // ✅ Deduplicate schemes
+  const schemesMap = new Map();
+  customers.forEach(c => {
+    if (c.scheme) {
+      schemesMap.set(c.scheme.id, c.scheme);
+    }
+  });
+  const schemes = Array.from(schemesMap.values());
+
+  // ✅ Deduplicate users
+  const usersMap = new Map();
+  customers.forEach(c => {
+    if (c.user) {
+      usersMap.set(c.user.id, c.user);
+    }
+  });
+  const users = Array.from(usersMap.values());
 
   return (
     <div>

@@ -6,7 +6,7 @@ import { db } from '@/lib/db'
 export async function POST(req) {
   try {
     const body = await req.json()
-    const { name, description, monthlyAmount, totalMonths } = body
+    const { name, description, monthlyAmount, totalMonths, totalMembers, cardPrefix } = body
 
     const scheme = await db.scheme.create({
       data: {
@@ -14,6 +14,8 @@ export async function POST(req) {
         description,
         monthlyAmount,
         totalMonths,
+        totalMembers,
+        cardPrefix,
       },
     })
 

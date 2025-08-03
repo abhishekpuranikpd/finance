@@ -14,6 +14,7 @@ import {
   BarChart3,
   CreditCard,
   UserPlus,
+  IdCard,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -56,6 +57,11 @@ const navigationItems = [
     icon: User,
     description: "Account settings",
   },
+      {href: "/dashboard/card-availability",
+    label: "Card Availability",
+    icon: User,
+    description: "Card Availability",
+  },
 ]
 
 const dashboardCards = [
@@ -95,6 +101,16 @@ const dashboardCards = [
     hoverColor: "hover:from-orange-600 hover:to-orange-700",
     stats: "248 Total",
   },
+{
+  href: "/dashboard/card-availability",
+  title: "Card Availability",
+  description: "Check available and booked cards for each scheme",
+  icon: IdCard,
+  color: "from-indigo-600 to-blue-600",
+  hoverColor: "hover:from-indigo-700 hover:to-blue-700",
+  stats: "Track Cards",
+},
+
   {
     href: "/dashboard/profile",
     title: "Profile Settings",

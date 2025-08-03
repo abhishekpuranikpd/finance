@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Loader2, Sparkles, Wallet, Calendar, DollarSign, ListChecks, ArrowLeft } from "lucide-react"
+import { Loader2, Sparkles, Wallet, Calendar, DollarSign, ListChecks, ArrowLeft, Users } from "lucide-react"
 
 export default function ViewSchemesPage() {
   const router = useRouter()
@@ -14,8 +14,6 @@ export default function ViewSchemesPage() {
     try {
       const response = await fetch("/api/schema/scheme")
       const data = await response.json()
-
-      console.log(data)
       setSchemes(data)
     } catch (error) {
       console.error("Failed to fetch schemes:", error)
@@ -53,7 +51,6 @@ export default function ViewSchemesPage() {
             </h1>
           </div>
 
-          {/* Schemes Count Badge */}
           {!loading && schemes.length > 0 && (
             <div className="flex items-center gap-2">
               <div className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
@@ -93,7 +90,6 @@ export default function ViewSchemesPage() {
                 className="bg-white/90 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm overflow-hidden"
               >
                 <CardHeader className="bg-gradient-to-r from-emerald-600 to-teal-600 p-4 text-white relative overflow-hidden">
-                  {/* Background decoration */}
                   <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
                   <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"></div>
 
@@ -114,7 +110,7 @@ export default function ViewSchemesPage() {
                   </p>
 
                   <div className="space-y-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
                       <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg">
                         <DollarSign className="h-4 w-4 text-green-600 flex-shrink-0" />
                         <div>
@@ -128,6 +124,15 @@ export default function ViewSchemesPage() {
                         <div>
                           <p className="text-xs text-gray-500">Duration</p>
                           <p className="font-semibold text-blue-700">{scheme.totalMonths} months</p>
+                        </div>
+                      </div>
+
+                      {/* ✅ Total Members */}
+                      <div className="flex items-center gap-2 p-2 bg-purple-50 rounded-lg">
+                        <Users className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                        <div>
+                          <p className="text-xs text-gray-500">Total Members</p>
+                          <p className="font-semibold text-purple-700">{scheme.totalMembers}</p>
                         </div>
                       </div>
                     </div>

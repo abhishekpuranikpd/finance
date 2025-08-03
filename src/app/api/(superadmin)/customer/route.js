@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { name, phone, email, address, userId,cardNo,  schemeId } = await req.json();
+    const { name, phone, email, address, userId, cardNo, schemeId } = await req.json();
 
     if (!name || !phone || !userId || !schemeId) {
       return NextResponse.json(
@@ -23,6 +23,14 @@ export async function POST(req) {
       );
     }
 
+    // Get the scheme to access cardPrefix
+    const scheme = await db.scheme.findUnique({
+      where: { id: schemeId },
+    });
+
+    // Generate prefixed card number
+    const fullCardNo = cardNo ? `${scheme.cardPrefix}${cardNo}` : null;
+
     const customer = await db.customer.create({
       data: {
         name,
@@ -35,7 +43,7 @@ export async function POST(req) {
         scheme: {
           connect: { id: schemeId },
         },
-        cardNo,
+        cardNo: fullCardNo, // Store the prefixed card number
       },
       include: {
         user: true,

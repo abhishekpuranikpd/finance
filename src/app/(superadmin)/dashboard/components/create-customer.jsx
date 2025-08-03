@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "react-toastify"
+import QRCode from "react-qr-code"
 import {
   User,
   Phone,
@@ -43,7 +44,6 @@ export default function CreateCustomerForm({ userId, schemeList }) {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
-    // Clear success state when user starts editing again
     if (success) {
       setSuccess(false)
       setCreatedCustomer(null)
@@ -96,12 +96,9 @@ export default function CreateCustomerForm({ userId, schemeList }) {
       }
 
       const data = await res.json()
-
-      // Set success state
       setSuccess(true)
       setCreatedCustomer(data)
 
-      // Show success toast
       toast.success(`Customer ${data.name || form.name} created successfully!`, {
         position: "top-right",
         autoClose: 5000,
@@ -111,7 +108,6 @@ export default function CreateCustomerForm({ userId, schemeList }) {
         draggable: true,
       })
 
-      // Reset form
       setForm({
         name: "",
         phone: "",
@@ -210,9 +206,34 @@ export default function CreateCustomerForm({ userId, schemeList }) {
                       <span className="font-bold text-lg">Customer Created Successfully!</span>
                     </div>
                     <p className="text-green-700 mb-4">
-                      Customer "{createdCustomer?.name || form.name}" has been added to your database and is ready to
-                      use.
+                      Customer "{createdCustomer?.name || form.name}" has been registered.
                     </p>
+                    
+                    {/* QR Code Section */}
+                    <div className="mt-6 mb-6 p-6 bg-white rounded-xl border border-green-200 shadow-sm">
+                      <h4 className="font-bold text-gray-800 mb-4 text-center">Send Membership Details to Customer</h4>
+                      <div className="flex flex-col items-center">
+                        <div className="p-4 bg-white border-2 border-green-300 rounded-lg mb-4">
+<QRCode 
+  value={`https://wa.me/${createdCustomer?.phone || form.phone}?text=Thank%20you%20${encodeURIComponent(createdCustomer?.name || form.name)}!%20Your%20Card%20No%20is%20${encodeURIComponent(createdCustomer?.cardNo || `${schemeList.find(s => s.id === form.schemeId)?.cardPrefix}-${form.cardNo}`)}%20for%20${encodeURIComponent(createdCustomer?.scheme?.name || schemeList.find(s => s.id === form.schemeId)?.name)}%20Scheme%20Membership.%20Regards,%20SK%20Enterprises%20%26%20PC%20World%20Computer.%20Contact:%209972749555,%209901091166`}
+  size={180}
+  level="H"
+  fgColor="#065f46"
+/>
+                        </div>
+                        <div className="text-center mb-4">
+                          <p className="text-sm font-medium text-gray-700">Customer Details:</p>
+                          <p className="text-gray-600">Name: {createdCustomer?.name || form.name}</p>
+                          <p className="text-gray-600">Phone: {createdCustomer?.phone || form.phone}</p>
+                          <p className="text-gray-600">Card No: {createdCustomer?.cardNo || form.cardNo}</p>
+                          <p className="text-gray-600">Scheme: {createdCustomer?.scheme?.name || schemeList.find(s => s.id === form.schemeId)?.name}</p>
+                        </div>
+                        <p className="text-sm text-gray-600 text-center max-w-md">
+                          Scan this QR code to send the membership details to the customer's registered phone number
+                        </p>
+                      </div>
+                    </div>
+
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button
                         onClick={handleBackToDashboard}
