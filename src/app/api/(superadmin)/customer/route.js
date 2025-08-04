@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-
 export async function POST(req) {
   try {
     const { name, phone, email, address, userId, cardNo, schemeId } = await req.json();
@@ -13,8 +12,11 @@ export async function POST(req) {
       );
     }
 
+    // ✅ Add +91 only if not already present
+    const formattedPhone = phone.startsWith("+91") ? phone : `+91${phone}`;
+
     const existing = await db.customer.findUnique({
-      where: { phone },
+      where: { phone: formattedPhone },
     });
 
     if (existing) {
@@ -35,7 +37,7 @@ export async function POST(req) {
     const customer = await db.customer.create({
       data: {
         name,
-        phone,
+        phone: formattedPhone, // ✅ Always store with +91
         email,
         address,
         user: {
