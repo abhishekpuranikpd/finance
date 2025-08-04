@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 const CreateCustomerPage = async () => {
   const session = await getSession();
-  if (!session || !session.email) {
+  if (!session || !session.mobile) {
     redirect("/")
   }
   const user = await db.user.findUnique({
