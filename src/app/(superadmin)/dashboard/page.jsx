@@ -14,11 +14,12 @@ import {
   BarChart3,
   CreditCard,
   UserPlus,
-  IdCard,
+  BadgeIcon as IdCard,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "../../../components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card"
+import { Badge } from "../../../components/ui/badge"
+import { PrivacyPolicyModal, TermsOfServiceModal } from "../../(superadmin)/dashboard/components/legal-modals"
 
 const navigationItems = [
   {
@@ -57,9 +58,10 @@ const navigationItems = [
     icon: User,
     description: "Account settings",
   },
-      {href: "/dashboard/card-availability",
+  {
+    href: "/dashboard/card-availability",
     label: "Card Availability",
-    icon: User,
+    icon: IdCard,
     description: "Card Availability",
   },
 ]
@@ -101,16 +103,15 @@ const dashboardCards = [
     hoverColor: "hover:from-orange-600 hover:to-orange-700",
     stats: "248 Total",
   },
-{
-  href: "/dashboard/card-availability",
-  title: "Card Availability",
-  description: "Check available and booked cards for each scheme",
-  icon: IdCard,
-  color: "from-indigo-600 to-blue-600",
-  hoverColor: "hover:from-indigo-700 hover:to-blue-700",
-  stats: "Track Cards",
-},
-
+  {
+    href: "/dashboard/card-availability",
+    title: "Card Availability",
+    description: "Check available and booked cards for each scheme",
+    icon: IdCard,
+    color: "from-indigo-600 to-blue-600",
+    hoverColor: "hover:from-indigo-700 hover:to-blue-700",
+    stats: "Track Cards",
+  },
   {
     href: "/dashboard/profile",
     title: "Profile Settings",
@@ -140,16 +141,12 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
   return (
     <>
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-300"
-          onClick={onClose}
-        />
+        <div className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-300" onClick={onClose} />
       )}
 
       <div
-        className={`sidebar fixed top-0 left-0 h-full bg-white border-r border-gray-200 w-72 z-40 transform transition-all duration-300 ease-in-out ${
-          isOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
-        } md:translate-x-0 md:shadow-none`}
+        className={`sidebar fixed top-0 left-0 h-full bg-white border-r border-gray-200 w-72 z-40 transform transition-all duration-300 ease-in-out ${isOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
+          } md:translate-x-0 md:shadow-none`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-indigo-600 to-purple-600">
@@ -212,12 +209,7 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
               <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-3 w-full"
-            onClick={onLogout}
-          >
+          <Button variant="outline" size="sm" className="mt-3 w-full bg-transparent" onClick={onLogout}>
             Logout
           </Button>
         </div>
@@ -226,28 +218,27 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
   )
 }
 
-
 const Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-   const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
 
-    // Fetch user session
+  // Fetch user session
   useEffect(() => {
     fetch("/api/session")
       .then((res) => res.json())
       .then((data) => setUser(data.user))
-      .catch(() => setUser(null));
-  }, []);
+      .catch(() => setUser(null))
+  }, [])
 
-    const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    window.location.href = "/login";
-  };
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" })
+    window.location.href = "/login"
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Sidebar */}
-       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} onLogout={handleLogout} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} onLogout={handleLogout} />
 
       {/* Mobile Toggle Button */}
       <Button
@@ -330,7 +321,7 @@ const Page = () => {
           </div>
 
           {/* Action Cards */}
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-12">
             {dashboardCards.map((card) => {
               const Icon = card.icon
               return (
@@ -366,6 +357,37 @@ const Page = () => {
             })}
           </div>
         </div>
+
+        {/* Footer Section with Legal Links */}
+        <footer className="bg-gradient-to-r from-gray-800 to-gray-900 text-white mt-auto">
+          <div className="px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="flex items-center space-x-3 mb-4 md:mb-0">
+                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                  <CreditCard className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold">SK Enterprises</h3>
+                  <p className="text-gray-400 text-sm">Business Management Solutions</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-6">
+                <Link href="/dashboard/privacy-policy" className="text-blue-600 hover:underline">
+                  Privacy Policy
+                </Link>
+                <div className="text-gray-500">|</div>
+                <Link href="/dashboard/terms-of-service" className="text-blue-600 hover:underline">
+                  Terms of Service
+                </Link>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-700 mt-6 pt-6 text-center">
+              <p className="text-gray-400 text-sm">© {new Date().getFullYear()} SK Enterprises. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import CardAvailability from "../components/CardAvailability";
-import { db } from "@/lib/db";
+import { db } from "../../../../lib/db";
 
 export default async function CardAvailabilityPage() {
   // Fetch schemes on the server

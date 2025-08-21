@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { encrypt } from "@/lib/getsession";
+import { encrypt } from "../../../../lib/getsession";
 
 export async function POST(request, params) {
   try {

@@ -1,7 +1,7 @@
 // src/app/api/(superadmin)/session/route.js
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { decrypt } from "@/lib/getsession";
+import { decrypt } from "../../../../lib/getsession";
 
 export async function GET() {
   try {
