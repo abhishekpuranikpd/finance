@@ -1,5 +1,5 @@
 // app/(superadmin)/customerslist/page.js
-import { db } from "@/lib/db";
+import { db } from "../../../../lib/db";
 import React from "react";
 import CustomerTable from "../components/allcustomerslist";
 

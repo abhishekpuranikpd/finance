@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { getSession } from "@/lib/getsession";
+import { db } from "../../../../lib/db";
+import { getSession } from "../../../../lib/getsession";
 import React from "react";
 import CreateCustomerForm from "../components/create-customer";
 import { redirect } from "next/navigation";

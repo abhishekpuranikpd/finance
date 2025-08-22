@@ -1,8 +1,8 @@
 "use client"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
+import { Button } from "../../../../components/ui/button"
 import { Loader2, Sparkles, Wallet, Calendar, DollarSign, ListChecks, ArrowLeft, Users } from "lucide-react"
 
 export default function ViewSchemesPage() {

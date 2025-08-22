@@ -7,7 +7,7 @@ import { Input } from "../../../components/ui/input"
 import { Label } from "../../../components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "../../../././components/ui/alert"
 import { Loader2, Mail, Lock, User, Phone, Shield, UserPlus, Sparkles } from "lucide-react"
 
 const wallpapers = [
